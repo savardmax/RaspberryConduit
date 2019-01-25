@@ -11,16 +11,20 @@ class Listen extends Worker {
         $address = 'localhost';
         $port = 4711;
 
-        if (($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
-           echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
-        }
-        socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1);
+        #if (($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
+        #   echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
+        #}
+        #socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1);
+        #if (socket_bind($sock, $address, $port) === false) {
+        #if (socket_bind($sock,  INADDR_ANY, $port) === false) {
+        #    echo "socket_bind() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
+        #}
 
-        if (socket_bind($sock, $address, $port) === false) {
-            echo "socket_bind() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
-        }
+        #if (socket_listen($sock, 5) === false) {
+        #    echo "socket_listen() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
+        #}
 
-        if (socket_listen($sock, 5) === false) {
+        if (($sock = socket_create_listen($port, 5)) === false) {
             echo "socket_listen() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
         }
         return $sock;
