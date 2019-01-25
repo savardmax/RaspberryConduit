@@ -1,0 +1,15 @@
+name: RaspberryConduit
+
+main: RaspberryConduit\Main
+
+version: 0.0.1
+
+api: 3.5.0
+
+load: POSTWORLD
+
+author: Maxime Savard
+
+description: Thread for connecting python to PMMP
+website: https://github.com/savardmax/RaspberryConduit
+
