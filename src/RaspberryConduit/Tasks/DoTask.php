@@ -14,9 +14,10 @@ class DoTask extends Task {
 
     protected $re_nbr =  '/[-+]?\d+/';
 
-    public function __construct($plugin, $conduit) { 
+    public function __construct($plugin, $conduit, $conduit_events) { 
         $this->plugin = $plugin;
         $this->conduit = $conduit;
+        $this->conduit_events = $conduit_events;
     }
 
     private function makeBox(array $pos){
@@ -80,6 +81,7 @@ class DoTask extends Task {
                     $vec = new Vector3((float)$pos[0], (float)$pos[1], (float)$pos[2]);
                     $player->teleport($vec);
                     $this->conduit[$job]['result'] = "NA";
+
                 } else if (strpos($cmd,"chat.post(") !== False) {
                     preg_match_all('/chat.post\((.*)\)/', $cmd, $scan);
                     if (count($scan)) {
@@ -115,6 +117,7 @@ class DoTask extends Task {
 
                     $response = implode(",",$result);
                     $this->conduit[$job]['result'] = $response;
+
                 } else if (strpos($cmd,"world.setBlocks(") !== False) {
                     $level = $this->plugin->getServer()->getDefaultLevel();
                     preg_match_all($this->re_nbr, $cmd, $s);
@@ -147,9 +150,31 @@ class DoTask extends Task {
                     $newblock = new Block($pos[3],$pos[4]);
                     $block = $level->setBlock($vec, $newblock);
                     $this->conduit[$job]['result'] = "NA";
+
+                } else if (strpos($cmd,"events.block.hits()") !== False) {
+                    $results = array();
+                    foreach($this->conduit_events as $key=>$event ){
+                        $results[$key] = $event;
+                    }
+                    foreach($results as $key=>$r){
+                        unset($this->conduit_events[$key]);
+                    }
+                    $output = implode('|',$results);
+                    $this->conduit[$job]['result'] = $output;
+
+                } else if (strpos($cmd,"events.clear()") !== False) {
+                    $results = array();
+                    foreach($this->conduit_events as $key=>$event ){
+                        $results[$key] = $event;
+                    }
+                    foreach($results as $key=>$r){
+                        unset($this->conduit_events[$key]);
+                    }
+                    $this->conduit[$job]['result'] = 'NA';
+
                 } else { #unknown command 
                     $this->conduit[$job]['result'] = "Fail";
-                    }
+                }
             } else {
                 #echo "Received command but No player found";
                 $this->conduit[$job]['result'] = "Fail";
