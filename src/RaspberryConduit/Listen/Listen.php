@@ -79,7 +79,7 @@ class Listen extends Worker {
                     unset($this->conduit[$key]);
                 }
 
-                sleep(0.01);
+                sleep(0.001);
                 continue;
             }
 

@@ -98,6 +98,16 @@ class DoTask extends Task {
                     $block = $level->getBlock($vec)->getId();
                     $this->conduit[$job]['result'] = "$block";
 
+                } else if (strpos($cmd,"world.getBlockWithData(") !== False) {
+                    preg_match_all($this->re_nbr, $cmd, $s);
+                    $pos = $s[0];
+                    $vec = new Vector3($pos[0], $pos[1], $pos[2]);
+                    $level = $this->plugin->getServer()->getDefaultLevel();
+                    $block = $level->getBlock($vec);
+                    $meta = $block->getDamage();
+                    $id = $block->getId();
+                    $this->conduit[$job]['result'] = "$id, $meta";
+
                 } else if (strpos($cmd,"world.getBlocks(") !== False) {
                     $level = $this->plugin->getServer()->getDefaultLevel();
                     preg_match_all($this->re_nbr, $cmd, $s);
